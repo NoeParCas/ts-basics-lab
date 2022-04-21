@@ -14,7 +14,7 @@ export default () => {
   // • Restrict type of `value` to `string OR number`
   // • Fix any resulting errors.
 
-  function doStuff(value: any): void {
+  function doStuff(value: string | number): void {
     if (typeof value === 'string') {
       console.log(value.toUpperCase().split('').join(' '));
     } else if (typeof value === 'number') {
@@ -28,8 +28,8 @@ export default () => {
   doStuff(22);
   doStuff(222);
   doStuff('hello');
-  doStuff(true);
-  doStuff({});
+  doStuff("yes");
+  doStuff("no");
 
   console.log('[Exercise 5.1]');
 
@@ -38,6 +38,11 @@ export default () => {
   // • Use a type guard to fill out the body of the `padLeft` function.
 
   function padLeft(value: string, padding: number | string): string {
+    if(typeof padding === 'number') {
+      return `${Array(padding + 1).join(' ')}${value}`
+    }else{
+      return padding + ' ' + value
+    }
     // if padding is a number, return `${Array(padding + 1).join(' ')}${value}`
     // if padding is a string, return padding + value
   }
@@ -57,15 +62,15 @@ export default () => {
 
   const numbers = [1, 2, 3, [44, 55], 6, [77, 88], 9, 10];
 
-  function flatten(array) {
-    const flattened = [];
+  function flatten(array:(number[]|number)[]) {
+    const flattened: number[]= [];
 
     for (const element of array) {
       if (Array.isArray(element)) {
-        element; // any[]
+        //element; // any[]
         flattened.push(...element);
       } else {
-        element; // any
+        //element; // any
         flattened.push(element);
       }
     }
@@ -100,7 +105,9 @@ export default () => {
   }
   // -----------------------
   // add type alias(es) here
-  // type BirdLike = ?
+type BirdLike = EggLayer & Flyer;
+type FishLike = EggLayer & Swimmer;
+type Animal = Bird & Fish;
 
   // -----------------------
 
@@ -140,8 +147,12 @@ export default () => {
   }
 
   function interrogateAnimal(animal = getRandomAnimal()) {
-    animal.swim(10) // call only if it is a fish
-    animal.fly(10); // call only if it is a bird
+    if(animal instanceof Fish){
+      animal.swim(10) // call only if it is a fish
+    }else if(animal instanceof Bird){
+      animal.fly(10); // call only if it is a bird
+
+    }
 
     return animal.species;
   }
